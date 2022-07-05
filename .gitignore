@@ -1,0 +1,4 @@
+.pylintrc
+.pytest_cache
+.idea
+logs

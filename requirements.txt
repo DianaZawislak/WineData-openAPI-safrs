@@ -1,0 +1,9 @@
+pytest
+pytest-pylint
+flask
+flask_restx
+pandas
+marshmallow_jsonapi
+flask_sqlalchemy
+flask_rest_jsonapi
+safrs
