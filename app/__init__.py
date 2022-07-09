@@ -41,7 +41,7 @@ class Country(SAFRSBase, db.Model):
 # create the api endpoints
 def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefix=""):
     # api = SAFRSAPI(app, host=host, port=port, prefix=api_prefix)
-    api = SAFRSAPI(app, host=host, port=port, prefix=api_prefix, title='Geography API',
+    api = SAFRSAPI(app, host=host, port=port, prefix=api_prefix, title='Wine Data - Country/Winery API',
                    description='A simple Geography API')
 
     api.expose_object(Country)
