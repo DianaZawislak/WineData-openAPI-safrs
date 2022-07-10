@@ -1,7 +1,7 @@
 # Flask Project 1
-### Name: <Insert Here>
-### UCID: <Insert Here>
-### Put a picture of your homepage here [example](endpoints.png)
+### Name: Diana Zawislak
+### UCID: DZ29
+![Screenshot of running application](screenshotSwagger.JPG)
 ## Introduction
 The purpose of this unit is to demonstrate how a framework / library like [SAFRS](https://github.com/thomaxxl/safrs)
 automates some boilerplate code required to create a REST API. Primarily SAFRS provides openAPI spec and JSON API in one
