@@ -22,30 +22,30 @@ db = SQLAlchemy()
 
 
 # Example sqla database objects
-class City(SAFRSBase, db.Model):
-    __tablename__ = "cities"
+class Winery(SAFRSBase, db.Model):
+    __tablename__ = "winery"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
-    country = db.relationship("Country", back_populates="cities")
+    country = db.relationship("Country", back_populates="winery")
 
 
 class Country(SAFRSBase, db.Model):
     __tablename__ = "countries"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
-    cities = db.relationship("City", back_populates="country")
+    winery = db.relationship("Winery", back_populates="country")
 
 
 # create the api endpoints
 def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefix=""):
     # api = SAFRSAPI(app, host=host, port=port, prefix=api_prefix)
     api = SAFRSAPI(app, host=host, port=port, prefix=api_prefix, title='Wine Data - Country/Winery API',
-                   description='A simple Geography API')
+                   description='A simple Wine data API (wineries and countries)')
 
     api.expose_object(Country)
-    api.expose_object(City)
+    api.expose_object(Winery)
     # print(f"Created API: http://{host}:{port}/{api_prefix}")
 
 
@@ -64,10 +64,10 @@ def create_app(config_filename=None, host="localhost"):
         database_path = os.path.join(path, '..', 'instance', 'file.db')
         os.remove(database_path)
         db.create_all()
-        # Populate the db with users and a books and add the book to the user.books relationship
+        # Populate the db with countries and a wineries and add the winery to the country.winery relationship
         path = os.path.dirname(os.path.abspath(__file__))
-        data_path = os.path.join(path, '..', 'data', 'worldcities.csv')
-        # makes data frame to hold the world cities data
+        data_path = os.path.join(path, '..', 'data', 'winedata3.csv')
+        # makes data frame to hold the world wineries data
         df = pd.read_csv(data_path)
         # Gets a list of unique countries from the data frame
         countries = df.country.unique()
@@ -75,16 +75,16 @@ def create_app(config_filename=None, host="localhost"):
             # this creates a country model based on Sqlalchemy model
             country = Country()
             country.name = country_name
-            # get a list of cities from the data frame that are in the country selected
-            cities = df.loc[df.country == country_name]
+            # get a list of wineries from the data frame that are in the country selected
+            winery = df.loc[df.country == country_name]
             # looping through all the cities
-            for city_string in cities['city_ascii']:
-                # Create a new city
-                city = City()
+            for winery_string in winery['winery']:
+                # Create a new winery
+                winery = Winery()
                 # Set the name
-                city.name = city_string
+                winery.name = winery_string
                 # append the city to the country
-                country.cities.append(city)
+                country.winery.append(winery)
 
         create_api(app, host)
 
