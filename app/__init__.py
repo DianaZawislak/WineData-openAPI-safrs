@@ -28,15 +28,22 @@ class Winery(SAFRSBase, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
+    #origin_country = db.Column(db.String, db.ForeignKey("countries.name"))
     country = db.relationship("Country", back_populates="winery")
+    #province = db.relationship("State_Province", back_populates="winery")
 
+#class Province(SAFRSBase, db.Model):
+#    __tablename__ = "province"
+
+#    id = db.Column(db.Integer, primary_key=True)
+#    name = db.Column(db.String, default="")
+#    winery_id = db.Column(db.Integer, db.ForeignKey("winery.id"))
 
 class Country(SAFRSBase, db.Model):
     __tablename__ = "countries"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     winery = db.relationship("Winery", back_populates="country")
-
 
 # create the api endpoints
 def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefix=""):
