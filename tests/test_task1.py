@@ -89,6 +89,6 @@ def test_task1_delete_city(client):
 
     data = {"type": "Winery", "id": winery_id}
 
-    response = client.delete(f"/cities/{winery_id}", json={"data": data})
+    response = client.delete(f"/winery/{winery_id}", json={"data": data})
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204

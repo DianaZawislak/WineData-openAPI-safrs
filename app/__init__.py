@@ -75,7 +75,7 @@ def create_app(config_filename=None, host="localhost"):
         db.create_all()
         # Populate the db with countries and a wineries and add the winery to the country.winery relationship
         path = os.path.dirname(os.path.abspath(__file__))
-        data_path = os.path.join(path, '..', 'data', 'winedata3.csv')
+        data_path = os.path.join(path, '..', 'data', 'wines.csv')
         # makes data frame to hold the world wineries data
         df = pd.read_csv(data_path)
         # Gets a list of unique countries from the data frame
