@@ -40,55 +40,55 @@ def test_task1_post_wineries_data(client):
 def test_task1_patch_cities_data(client):
     """Testing a patch / update to a city that is just inserted"""
     # first I have to make a city
-    data = {"attributes": {"name": "Pittsburgh", "country_id": 1}, "type": "City"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post("/cities/", json={"data": data})
+    response = client.post("/winery/", json={"data": data})
     # now i have to get the data
     response_data = response.get_json()
     # now i get the id of the new record
-    city_id = response_data["data"]["id"]
+    winery_id = response_data["data"]["id"]
     print_json_to_data_view_log_nicely(response_data)
-    data = {"attributes": {"name": "Piturgh", "country_id": 1}, "type": "City", "id": city_id}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery", "id": winery_id}
 
-    response = client.patch(f"/cities/{city_id}", json={"data": data})
+    response = client.patch(f"/winery/{winery_id}", json={"data": data})
     response_data = response.get_json()
-    # print_json_to_data_view_log_nicely(response_data)
+    print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 200
-    assert response_data["data"]["attributes"]["name"] == "Piturgh"
+    assert response_data["data"]["attributes"]["name"] == "Heitz"
 
 
-def test_task1_patch_method_not_allowed_cities_data(client):
+def test_task1_patch_method_not_allowed_wineries_data(client):
     """Testing that this will make a method not allowed if i try to post to a new record"""
     # first I have to make a city
-    data = {"attributes": {"name": "Pittsburgh", "country_id": 1}, "type": "City"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post("/cities/", json={"data": data})
+    response = client.post("/winery/", json={"data": data})
     # now i have to get the data
     response_data = response.get_json()
     # now i get the id of the new record
     city_id = response_data["data"]["id"]
 
-    data = {"attributes": {"name": "Piturgh", "country_id": 1}, "type": "City"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post(f"/cities/{city_id}", json={"data": data})
+    response = client.post(f"/wonery/{city_id}", json={"data": data})
     response_data = response.get_json()
-    # print_json_to_data_view_log_nicely(response_data)
+    print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 405
 
 
 def test_task1_delete_city(client):
-    """This will test deleting a city"""
-    # first I have to make a city
-    data = {"attributes": {"name": "Pittsburgh", "country_id": 1}, "type": "City"}
+    """This will test deleting a winery"""
+    # first I have to make a winery
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post("/cities/", json={"data": data})
+    response = client.post("/winery/", json={"data": data})
     # now i have to get the data
     response_data = response.get_json()
     # now i get the id of the new record
-    city_id = response_data["data"]["id"]
+    winery_id = response_data["data"]["id"]
 
-    data = {"type": "City", "id": city_id}
+    data = {"type": "Winery", "id": winery_id}
 
-    response = client.delete(f"/cities/{city_id}", json={"data": data})
-    # print_json_to_data_view_log_nicely(response_data)
+    response = client.delete(f"/cities/{winery_id}", json={"data": data})
+    print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204
