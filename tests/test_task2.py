@@ -11,7 +11,8 @@ def test_task2_home_route(client):
     response = client.get('/')
     assert response.status_code == 200, "Homepage did return 200 status code"
 
-"""testing "GET" endpoints"""
+
+#"""testing "GET" endpoints"""
 
 def test_task2_get_wineries_data(client):
     """Testing the wineries endpoint retrieves the correct data"""
@@ -41,7 +42,7 @@ def test_task2_get_province_data(client):
     assert province_name == "California", "The first province/state is California as expected"
 
 
-"""Testing "POST" endpoints"""
+#"""Testing "POST" endpoints"""
 
 def test_task2_post_wineries_data(client):
     """Testing a post to wineries"""
@@ -71,7 +72,7 @@ def test_task2_post_province_data(client):
     assert response_data["data"]["attributes"]["name"] == "California"
 
 
-"""Testing "PATCH" endpoints"""
+#"""Testing "PATCH" endpoints"""
 
 def test_task2_patch_wineries_data(client):
     """Testing a patch / update to a city that is just inserted"""
@@ -116,7 +117,7 @@ def test_task2_patch_province_data(client):
     assert response_data["data"]["attributes"]["name"] == "California"
 
 
-"""Testing "METHOD NOT ALLOWED" endpoints"""
+#"""Testing "METHOD NOT ALLOWED" endpoints"""
 
 def test_task2_patch_method_not_allowed_wineries_data(client):
     """Testing that this will make a method not allowed if i try to post to a new record"""
@@ -131,7 +132,7 @@ def test_task2_patch_method_not_allowed_wineries_data(client):
     assert response.status_code == 405
 
 
-"""Testing "DELETE' endpoints"""
+#"""Testing "DELETE' endpoints"""
 
 def test_task2_delete_winery(client):
     """This will test deleting a winery"""
@@ -143,5 +144,3 @@ def test_task2_delete_winery(client):
     response = client.delete(f"/winery/{winery_id}", json={"data": data})
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204
-
-
