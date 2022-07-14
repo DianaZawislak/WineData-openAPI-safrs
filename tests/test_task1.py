@@ -1,4 +1,4 @@
-""" Make the tests pass to make the cities endpoint work"""
+""" Make the tests pass to make the wineries' endpoint work"""
 
 # pylint: disable=redefined-outer-name, unused-argument, line-too-long
 
