@@ -2,6 +2,7 @@
 ### Name: Diana Zawislak
 ### UCID: DZ29
 ![Screenshot of running application](screenshotSwagger.JPG)
+![Screenshot of running application](img.png)
 ## Introduction
 The purpose of this unit is to demonstrate how a framework / library like [SAFRS](https://github.com/thomaxxl/safrs)
 automates some boilerplate code required to create a REST API. Primarily SAFRS provides openAPI spec and JSON API in one
