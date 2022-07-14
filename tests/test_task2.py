@@ -70,6 +70,7 @@ def test_task2_post_province_data(client):
     assert response.status_code == 201
     assert response_data["data"]["attributes"]["name"] == "California"
 
+
 """Testing "PATCH" endpoints"""
 
 def test_task2_patch_wineries_data(client):
@@ -129,6 +130,8 @@ def test_task2_patch_method_not_allowed_wineries_data(client):
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 405
 
+
+"""Testing "DELETE' endpoints"""
 
 def test_task2_delete_winery(client):
     """This will test deleting a winery"""
