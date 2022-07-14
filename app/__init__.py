@@ -21,29 +21,30 @@ from app.logging_config import logging_setup
 db = SQLAlchemy()
 
 
-# Example sqla database objects
+# sqla database objects
 class Winery(SAFRSBase, db.Model):
     __tablename__ = "winery"
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
-    #origin_country = db.Column(db.String, db.ForeignKey("countries.name"))
+    province_id = db.Column(db.Integer, db.ForeignKey("province.id"))
     country = db.relationship("Country", back_populates="winery")
-    #province = db.relationship("State_Province", back_populates="winery")
+    province = db.relationship("Province", back_populates="winery")
 
-#class Province(SAFRSBase, db.Model):
-#    __tablename__ = "province"
-
-#    id = db.Column(db.Integer, primary_key=True)
-#    name = db.Column(db.String, default="")
-#    winery_id = db.Column(db.Integer, db.ForeignKey("winery.id"))
+class Province(SAFRSBase, db.Model):
+    __tablename__ = "province"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, default="")
+    winery = db.relationship("Winery", back_populates="province")
+    country = db.relationship("Country", back_populates="province")
+    country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
 
 class Country(SAFRSBase, db.Model):
     __tablename__ = "countries"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     winery = db.relationship("Winery", back_populates="country")
+    province = db.relationship("Province", back_populates="country")
 
 # create the api endpoints
 def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefix=""):
@@ -53,6 +54,7 @@ def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefi
 
     api.expose_object(Country)
     api.expose_object(Winery)
+    api.expose_object(Provincepytest)
     # print(f"Created API: http://{host}:{port}/{api_prefix}")
 
 
@@ -69,7 +71,7 @@ def create_app(config_filename=None, host="localhost"):
 
     with app.app_context():
         database_path = os.path.join(path, '..', 'instance', 'file.db')
-        os.remove(database_path)
+        #os.remove(database_path)
         db.create_all()
         # Populate the db with countries and a wineries and add the winery to the country.winery relationship
         path = os.path.dirname(os.path.abspath(__file__))
@@ -78,12 +80,14 @@ def create_app(config_filename=None, host="localhost"):
         df = pd.read_csv(data_path)
         # Gets a list of unique countries from the data frame
         countries = df.country.unique()
+        province = df.province.unique()
         for country_name in countries:
             # this creates a country model based on Sqlalchemy model
             country = Country()
             country.name = country_name
             # get a list of wineries from the data frame that are in the country selected
             winery = df.loc[df.country == country_name]
+
             # looping through all the cities
             for winery_string in winery['winery']:
                 # Create a new winery
@@ -92,6 +96,24 @@ def create_app(config_filename=None, host="localhost"):
                 winery.name = winery_string
                 # append the city to the country
                 country.winery.append(winery)
+
+        for province_name in province:
+            # this creates a country model based on Sqlalchemy model
+            province = Province()
+            province.name = province_name
+            # get a list of wineries from the data frame that are in the country selected
+            winery = df.loc[df.province == province_name]
+
+            # looping through all the cities
+            for winery_string in winery['winery']:
+                # Create a new winery
+                winery = Winery()
+                # Set the name
+                winery.name = winery_string
+                # append the city to the country
+                province.winery.append(winery)
+
+
 
         create_api(app, host)
 
