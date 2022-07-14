@@ -12,29 +12,29 @@ def test_task1_home_route(client):  # <---Arrange the test with the fixture, you
     # in plain english.
 
 
-def test_task1_get_cities_data(client):  # <---Arrange the test with the fixture, you can add others
+def test_task1_get_wineries_data(client):  # <---Arrange the test with the fixture, you can add others
     """Testing the cities endpoint retrieves the correct data"""  # <---You need the comment to describe the tests
-    response = client.get('/cities/')  # <--Act Perform an action
+    response = client.get('/winery/')  # <--Act Perform an action
     assert response.status_code == 200, "Cites did not return 200 status code "  # <--Explain if something fails in
     # plain english.
 
     # Uncomment this to use this function to print to the data_view.log file to see the data you want to inspect.
-    # print_json_to_data_view_log_nicely(response.get_json())
+    print_json_to_data_view_log_nicely(response.get_json())
 
     data = response.get_json()
-    city_name = data["data"][0]["attributes"]["name"]
-    assert city_name == "Tokyo", "The first city is not Tokyo as expected"
+    winery_name = data["data"][0]["attributes"]["name"]
+    assert winery_name == "Heitz", "The first city is not Tokyo as expected"
 
 
-def test_task1_post_cities_data(client):
+def test_task1_post_wineries_data(client):
     """Testing a post to cities"""
-    data = {"attributes": {"name": "Pittsburgh", "country_id": 1}, "type": "City"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post("/cities/", json={"data": data})
+    response = client.post("/winery/", json={"data": data})
     response_data = response.get_json()
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 201
-    assert response_data["data"]["attributes"]["name"] == "Pittsburgh"
+    assert response_data["data"]["attributes"]["name"] == "Heitz"
 
 
 def test_task1_patch_cities_data(client):

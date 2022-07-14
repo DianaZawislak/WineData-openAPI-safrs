@@ -54,7 +54,7 @@ def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefi
 
     api.expose_object(Country)
     api.expose_object(Winery)
-    api.expose_object(Provincepytest)
+    api.expose_object(Province)
     # print(f"Created API: http://{host}:{port}/{api_prefix}")
 
 
