@@ -1,6 +1,6 @@
 """Testing all Wine models, endpoints, home route"""
 
-# pylint: disable=redefined-outer-name, unused-argument
+# pylint: disable=redefined-outer-name, unused-argument, unspecified-encoding
 # pylint: disable=redefined-outer-name, unused-argument, line-too-long
 # pylint: disable=unused-argument, unused-import, duplicate-code, comparison-with-itself, singleton-comparison
 import csv
@@ -170,7 +170,7 @@ def test_task2_delete_winery(client):
 
 
  # Testing CSV file
-
+"""Testing Csv"""
 BASE_DIR = config.Config.BASE_DIR
 uploaddir = os.path.join(BASE_DIR, '../data')
 test_file = os.path.join(uploaddir, 'test.csv')
