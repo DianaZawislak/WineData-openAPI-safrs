@@ -2,17 +2,40 @@
 
 # pylint: disable=redefined-outer-name, unused-argument
 # pylint: disable=redefined-outer-name, unused-argument, line-too-long
+# pylint: disable=unused-argument, unused-import, duplicate-code, comparison-with-itself, singleton-comparison
+import csv
+import os
+from os.path import exists
 
+from pandas.io.common import file_exists
+from pylint.testutils.functional import test_file
+
+from app import app, config
 from tests.helpers import print_json_to_data_view_log_nicely
 
 
+    # Testing HOME ROUTE and RECORDS routes
 def test_task2_home_route(client):
     """Testing the home route to see it returns 200 OK"""
     response = client.get('/')
     assert response.status_code == 200, "Homepage did return 200 status code"
 
+def test_task2_routes():
+    """Testing the routes to list records"""
+    response = app.test_client().get('/')
+    assert response.status_code == 200
+    response = app.test_client().get('/countries/')
+    assert response.status_code == 200
+    response = app.test_client().get('/winery/')
+    assert response.status_code == 200
 
-#"""testing "GET" endpoints"""
+def test_task2_province_route():
+    """Testing the routes to list provinces"""
+    response = app.test_client().get('/province/')
+    assert response.status_code == 200
+
+
+    #  testing "GET" endpoints
 
 def test_task2_get_wineries_data(client):
     """Testing the wineries endpoint retrieves the correct data"""
@@ -42,7 +65,7 @@ def test_task2_get_province_data(client):
     assert province_name == "California", "The first province/state is California as expected"
 
 
-#"""Testing "POST" endpoints"""
+    #  Testing "POST" endpoints
 
 def test_task2_post_wineries_data(client):
     """Testing a post to wineries"""
@@ -72,7 +95,7 @@ def test_task2_post_province_data(client):
     assert response_data["data"]["attributes"]["name"] == "California"
 
 
-#"""Testing "PATCH" endpoints"""
+    # Testing "PATCH" endpoints
 
 def test_task2_patch_wineries_data(client):
     """Testing a patch / update to a city that is just inserted"""
@@ -117,7 +140,7 @@ def test_task2_patch_province_data(client):
     assert response_data["data"]["attributes"]["name"] == "California"
 
 
-#"""Testing "METHOD NOT ALLOWED" endpoints"""
+    # Testing "METHOD NOT ALLOWED" endpoints
 
 def test_task2_patch_method_not_allowed_wineries_data(client):
     """Testing that this will make a method not allowed if i try to post to a new record"""
@@ -132,7 +155,7 @@ def test_task2_patch_method_not_allowed_wineries_data(client):
     assert response.status_code == 405
 
 
-#"""Testing "DELETE' endpoints"""
+    # Testing "DELETE' endpoints
 
 def test_task2_delete_winery(client):
     """This will test deleting a winery"""
@@ -144,3 +167,28 @@ def test_task2_delete_winery(client):
     response = client.delete(f"/winery/{winery_id}", json={"data": data})
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204
+
+
+ # Testing CSV file
+
+BASE_DIR = config.Config.BASE_DIR
+uploaddir = os.path.join(BASE_DIR, '../data')
+test_file = os.path.join(uploaddir, 'test.csv')
+
+
+def test_task2_upload_dir():
+    """Tests for existence of upload directory"""
+    if not os.path.exists(uploaddir):
+        os.mkdir(uploaddir)
+    assert os.path.exists(uploaddir)
+
+
+def test_task2_csv_existence():
+    """Tests for csv file existence"""
+    fields = ['country', 'designation', 'points', 'price', 'province', 'region_1', 'region_2', 'variety', 'winery']
+    rows = [['US', 'Reserve', '96', '65', 'Oregon', 'Willamette Valley', 'Willamette Valley', 'Pinot Noir', 'Ponzi']]
+    with open(test_file, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(fields)
+        csvwriter.writerows(rows)
+    assert os.path.exists(test_file)
