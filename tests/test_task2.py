@@ -10,7 +10,7 @@ from os.path import exists
 from pandas.io.common import file_exists
 from pylint.testutils.functional import test_file
 
-from app import app
+from app import app, config
 from tests.helpers import print_json_to_data_view_log_nicely
 
 
@@ -171,23 +171,24 @@ def test_task2_delete_winery(client):
 
  # Testing CSV file
 
-def test_task2_existence_csv():
-    wines = os.path.join('wines.csv')
-    assert os.path.exists(wines) == True
-
-def test_task2_csv_location():
-        """Checks that the wines.csv file is in the right place."""
-        assert exists(os.path.join(app, "..", "data",
-                                   "../data/wines.csv")), "wines.csv not found"
+BASE_DIR = config.Config.BASE_DIR
+uploaddir = os.path.join(BASE_DIR, '../data')
+test_file = os.path.join(uploaddir, 'test.csv')
 
 
-    #'''Tests for csv file existence'''
-    #fields = ['country', 'designation', 'points', 'price', 'province', 'region_1', 'region_2', 'variety', 'winery']
-    #rows = [['US', 'Reserve', '96', '65', 'Oregon', 'Willamette Valley', 'Willamette Valley', 'Pinot Noir', 'Ponzi']]
+def test_task2_upload_dir():
+    """Tests for existence of upload directory"""
+    if not os.path.exists(uploaddir):
+        os.mkdir(uploaddir)
+    assert os.path.exists(uploaddir)
 
-    #with open(test_file, 'wines') as csvfile:
-        #csvwriter = csv.writer(csvfile)
-        #csvwriter.writerow(fields)
-        #csvwriter.writerows(rows)
 
-    #assert os.path.exists(test_file)
+def test_task2_csv_existence():
+    """Tests for csv file existence"""
+    fields = ['country', 'designation', 'points', 'price', 'province', 'region_1', 'region_2', 'variety', 'winery']
+    rows = [['US', 'Reserve', '96', '65', 'Oregon', 'Willamette Valley', 'Willamette Valley', 'Pinot Noir', 'Ponzi']]
+    with open(test_file, 'w') as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(fields)
+        csvwriter.writerows(rows)
+    assert os.path.exists(test_file)
