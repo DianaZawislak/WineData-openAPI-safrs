@@ -170,7 +170,7 @@ def test_task2_delete_winery(client):
 
 
  # Testing CSV file
-"""Testing Csv"""
+
 BASE_DIR = config.Config.BASE_DIR
 uploaddir = os.path.join(BASE_DIR, '../data')
 test_file = os.path.join(uploaddir, 'test.csv')

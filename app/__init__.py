@@ -81,6 +81,7 @@ def create_app(config_filename=None, host="localhost"):
         # Gets a list of unique countries from the data frame
         countries = df.country.unique()
         province = df.province.unique()
+        winery = df.winery.unique()
         for country_name in countries:
             # this creates a country model based on Sqlalchemy model
             country = Country()
@@ -104,7 +105,7 @@ def create_app(config_filename=None, host="localhost"):
             # get a list of wineries from the data frame that are in the country selected
             winery = df.loc[df.province == province_name]
 
-            # looping through all the cities
+            # looping through all wineries
             for winery_string in winery['winery']:
                 # Create a new winery
                 winery = Winery()
@@ -113,6 +114,21 @@ def create_app(config_filename=None, host="localhost"):
                 # append the city to the country
                 province.winery.append(winery)
 
+        for winery_name in winery:
+            # this creates a country model based on Sqlalchemy model
+            winery = Winery()
+            winery.name = winery_name
+            # get a list of wineries from the data frame that are in the country selected
+            country = df.loc[df.winery == winery_name]
+
+            # looping through all countries
+            for country_string in country['country']:
+                # Create a new winery
+                country = Country()
+                # Set the name
+                country.name = country_string
+                # append the city to the country
+                winery.country.append(country)
 
 
         create_api(app, host)
