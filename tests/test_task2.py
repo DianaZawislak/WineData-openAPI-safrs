@@ -56,7 +56,7 @@ def test_task2_get_countries_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     country_name = data["data"][0]["attributes"]["name"]
-    assert country_name == "US", "The first country is US as expected"
+    assert country_name == "US",
 
 
 def test_task2_get_province_data(client):
@@ -66,7 +66,7 @@ def test_task2_get_province_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     province_name = data["data"][0]["attributes"]["name"]
-    assert province_name == "California", "The first province/state is California as expected"
+    assert province_name == "California"
 
     #  Testing "POST" endpoints
 
@@ -310,6 +310,14 @@ def test_task2_sqlalchemy_logfiles():
 
 def test_task2_werkzeug_logfiles():
     logfile = os.path.join(logdir, 'werkzeug.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
+
+
+def test_task2_errors_logfiles():
+    logfile = os.path.join(logdir, 'errors.log')
     if not os.path.exists(logfile):
         f = open(logfile, 'w')
         f.close()
