@@ -76,11 +76,10 @@ def test_task1_patch_method_not_allowed_wineries_data(client):
     assert response.status_code == 405
 
 
-def test_task1_delete_city(client):
+def test_task1_delete_winery(client):
     """This will test deleting a winery"""
     # first I have to make a winery
-    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
-
+    data = {"attributes": {"name": "Blue Farm", "country_id": 1}, "type": "Winery"}
     response = client.post("/winery/", json={"data": data})
     # now i have to get the data
     response_data = response.get_json()
