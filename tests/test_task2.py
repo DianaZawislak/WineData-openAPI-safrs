@@ -25,12 +25,19 @@ def test_task2_home_route(client):
     assert response.status_code == 200, "Homepage did return 200 status code"
 
 
-def test_task2_routes():
+def test_task2_home_route():
     """Testing the routes to list records"""
     response = app.test_client().get('/')
     assert response.status_code == 200
+
+def test_task2_countries_route():
+    """Testing the routes to list records"""
     response = app.test_client().get('/countries/')
     assert response.status_code == 200
+
+
+def test_task2_winery_route():
+    """Testing the routes to list records"""
     response = app.test_client().get('/winery/')
     assert response.status_code == 200
 
@@ -45,13 +52,6 @@ def test_task2_province_route():
     """Testing the routes to list provinces"""
     response = app.test_client().get('/province/')
     assert response.status_code == 200
-
-
-@pytest.mark.parametrize("country, winery", [
-    ("US", "Heitz"),
-    ("France", "Vignobles Brumont"),
-])
-
 
 
     #  testing "GET" endpoints
@@ -74,17 +74,17 @@ def test_task2_get_countries_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     country_name = data["data"][0]["attributes"]["name"]
-    assert country_name == "US"
+    assert country_name == "Spain"
 
 
-#def test_task2_get_province_data(client):
-    #"""Testing the province/state endpoint retrieves the correct data"""
-    #response = client.get('/province/')
-    #assert response.status_code == 200
-    #print_json_to_data_view_log_nicely(response.get_json())
-    #data = response.get_json()
-    #province_name = data["data"][0]["attributes"]["name"]
-    #assert province_name == "California"
+def test_task2_get_province_data(client):
+    """Testing the province/state endpoint retrieves the correct data"""
+    response = client.get('/province/')
+    assert response.status_code == 200
+    print_json_to_data_view_log_nicely(response.get_json())
+    data = response.get_json()
+    province_name = data["data"][0]["attributes"]["name"]
+    assert province_name == "Unnamed: 0"
 
     #  Testing "POST" endpoints
 
@@ -275,21 +275,22 @@ def test_task2_delete_winery(client):
     assert response.status_code == 204
 
 
-def test_task2_delete_country(client):
-    """This will test deleting a country"""
-    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
-    response = client.post("/country/", json={"data": data})
-    response_data = response.get_json()
-    country_id = response_data["data"]["id"]
-    data = {"type": "Winery", "id": country_id}
-    response = client.delete(f"/country/{country_id}", json={"data": data})
-    print_json_to_data_view_log_nicely(response_data)
-    assert response.status_code == 204
-
 
 def test_task2_delete_province(client):
     """This will test deleting a province"""
     data = {"attributes": {"name": "Blue Farm", "country_id": 1}, "type": "Province"}
+    response = client.post("/province/", json={"data": data})
+    response_data = response.get_json()
+    winery_id = response_data["data"]["id"]
+    data = {"type": "Province", "id": winery_id}
+    response = client.delete(f"/province/{winery_id}", json={"data": data})
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 204
+
+
+def test_task2_delete_country(client):
+    """This will test deleting a country"""
+    data = {"attributes": {"name": "Vignobles Brumont", "country_id": 1}, "type": "Province"}
     response = client.post("/province/", json={"data": data})
     response_data = response.get_json()
     winery_id = response_data["data"]["id"]
