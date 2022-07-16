@@ -109,6 +109,16 @@ def test_task2_post_countries(client):
     assert response_data["data"]["attributes"]["name"] == "France"
 
 
+def test_task2_post_state_data(client):
+    """Testing a post to province/state"""
+    data = {"attributes": {"name": "California", "country_id": 1}, "type": "Province"}
+    response = client.post("/province/", json={"data": data})
+    response_data = response.get_json()
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 201
+    assert response_data["data"]["attributes"]["name"] == "California"
+
+
 def test_task2_post_wineries(client):
     """Testing a post to wineries"""
     data = {"attributes": {"name": "Vignobles Brumont", "country_id": 13}, "type": "Winery"}
@@ -137,6 +147,26 @@ def test_task2_post_province_data(client):
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 201
     assert response_data["data"]["attributes"]["name"] == "California"
+
+    # testing relationships
+
+
+def test_task2_post_with_relationship_state_country(client):
+    """Testing post method with relationship country/province"""
+    country_name = "US"
+    data = {
+        "attributes": {
+            "title": "test"},
+        "relationships": {
+            "reader": {
+                "data": {
+                    "id": None,
+                    "type": "Country",
+                    "attributes": {
+                        "name": country_name}}}},
+        "type": "Province"}
+    res = client.post("/province", json={"data": data})
+    assert res.status_code == 201
 
 
 def test_task2_post_with_relationship_country_winery(client):
@@ -196,7 +226,7 @@ def test_task2_post_with_relationship_province_country(client):
 
 
 def test_task2_patch_wineries_data(client):
-    """Testing a patch / update to a city that is just inserted"""
+    """Testing a patch / update to a winery that is just inserted"""
     data = {"attributes": {"name": "Blue Farm", "country_id": 1}, "type": "Winery"}
     response = client.post("/winery/", json={"data": data})
     response_data = response.get_json()
@@ -238,6 +268,12 @@ def test_task2_patch_province_data(client):
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 200
     assert response_data["data"]["attributes"]["name"] == "California"
+
+
+    # Testing forbidden request 403
+
+
+
 
     # Testing "METHOD NOT ALLOWED" endpoints
 
