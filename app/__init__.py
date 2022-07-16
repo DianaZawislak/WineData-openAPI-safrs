@@ -31,6 +31,7 @@ class Winery(SAFRSBase, db.Model):
     country = db.relationship("Country", back_populates="winery")
     province = db.relationship("Province", back_populates="winery")
 
+
 class Province(SAFRSBase, db.Model):
     __tablename__ = "province"
     id = db.Column(db.Integer, primary_key=True)
@@ -39,12 +40,14 @@ class Province(SAFRSBase, db.Model):
     country = db.relationship("Country", back_populates="province")
     country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
 
+
 class Country(SAFRSBase, db.Model):
     __tablename__ = "countries"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
     winery = db.relationship("Winery", back_populates="country")
     province = db.relationship("Province", back_populates="country")
+
 
 # create the api endpoints
 def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefix=""):
@@ -55,7 +58,7 @@ def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefi
     api.expose_object(Country)
     api.expose_object(Winery)
     api.expose_object(Province)
-    # print(f"Created API: http://{host}:{port}/{api_prefix}")
+    print(f"Created API: http://{host}:{port}/{api_prefix}")
 
 
 def create_app(config_filename=None, host="localhost"):
@@ -80,16 +83,16 @@ def create_app(config_filename=None, host="localhost"):
         df = pd.read_csv(data_path)
         # Gets a list of unique countries from the data frame
         countries = df.country.unique()
-        province = df.province.unique()
-        winery = df.winery.unique()
+
         for country_name in countries:
             # this creates a country model based on Sqlalchemy model
             country = Country()
             country.name = country_name
             # get a list of wineries from the data frame that are in the country selected
             winery = df.loc[df.country == country_name]
+            province = df.loc[df.country == country_name]
 
-            # looping through all the cities
+            # looping through all winery
             for winery_string in winery['winery']:
                 # Create a new winery
                 winery = Winery()
@@ -97,6 +100,15 @@ def create_app(config_filename=None, host="localhost"):
                 winery.name = winery_string
                 # append the city to the country
                 country.winery.append(winery)
+
+            # looping through all province
+            #for province_string in province['province']:
+            #    # Create a new province
+            #    province = Province()
+            #    # Set the name
+             #   province.name = province_string
+            #    # append the city to the country
+            #    country.province.append(province)
 
         for province_name in province:
             # this creates a country model based on Sqlalchemy model
@@ -113,23 +125,6 @@ def create_app(config_filename=None, host="localhost"):
                 winery.name = winery_string
                 # append the city to the country
                 province.winery.append(winery)
-
-        for winery_name in winery:
-            # this creates a country model based on Sqlalchemy model
-            winery = Winery()
-            winery.name = winery_name
-            # get a list of wineries from the data frame that are in the country selected
-            country = df.loc[df.winery == winery_name]
-
-            # looping through all countries
-            for country_string in country['country']:
-                # Create a new winery
-                country = Country()
-                # Set the name
-                country.name = country_string
-                # append the city to the country
-                winery.country.append(country)
-
 
         create_api(app, host)
 
