@@ -1,6 +1,6 @@
 """Testing all Wine models, endpoints, home route"""
 
-# pylint: disable=redefined-outer-name, unused-argument, unspecified-encoding
+# pylint: disable=unspecified-encoding, consider-using-with
 # pylint: disable=redefined-outer-name, unused-argument, line-too-long, invalid-name
 # pylint: disable=unused-argument, unused-import, duplicate-code, comparison-with-itself, singleton-comparison
 import csv
@@ -33,6 +33,12 @@ def test_task2_routes():
     assert response.status_code == 200
     response = app.test_client().get('/winery/')
     assert response.status_code == 200
+
+
+def test_task2_page_not_found():
+    """Testing the routes to list records"""
+    response = app.test_client().get('/page not found/')
+    assert response.status_code == 404
 
 
 def test_task2_province_route():
@@ -285,17 +291,29 @@ def test_task2_delete_province(client):
     assert response.status_code == 204
 
 
-# Testing page not found for few endpoints
-
-def test_task2_pagenotfound_wineries(client):
-    """Testing page not found for wineries endpoint"""
-
+def test_task2_delete_state(client):
+    """This will test deleting a state"""
+    data = {"attributes": {"name": "Muga", "country_id": 2}, "type": "Province"}
+    response = client.post("/province/", json={"data": data})
+    response_data = response.get_json()
+    winery_id = response_data["data"]["id"]
+    data = {"type": "Province", "id": winery_id}
+    response = client.delete(f"/province/{winery_id}", json={"data": data})
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 204
 
 
 # Testing log files
 
 root = os.path.dirname(os.path.abspath(__file__))
 logdir = os.path.join(root, '../logs')
+
+def test_task2_create_log_folder():
+    """testing if log folder was created"""
+    root = os.path.dirname(os.path.abspath(__file__))
+    logdir = os.path.join(root, '../logs')
+    response = os.path.exists(logdir)
+    assert response == True
 
 
 def test_task2_dataview_logfiles():
@@ -350,6 +368,13 @@ uploaddir = os.path.join(BASE_DIR, '../data')
 test_file = os.path.join(uploaddir, 'test.csv')
 
 
+def test_task2_wines_csv():
+    """testing if wines csv exists"""
+    root = os.path.dirname(os.path.abspath(__file__))
+    logdir = os.path.join(root, '../data/wines.csv')
+    response = os.path.exists(logdir)
+    assert response == True
+
 def test_task2_upload_dir():
     """Tests for existence of upload directory"""
     if not os.path.exists(uploaddir):
@@ -366,3 +391,13 @@ def test_task2_csv_existence():
         csvwriter.writerow(fields)
         csvwriter.writerows(rows)
     assert os.path.exists(test_file)
+
+
+# Testing existence of database
+
+def test_task2_db_existance():
+    """Testing if database was created"""
+    root = os.path.dirname(os.path.abspath(__file__))
+    dbdir = os.path.join(root, '../instance')
+    response = os.path.exists(dbdir)
+    assert  response == True
