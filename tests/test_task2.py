@@ -56,7 +56,7 @@ def test_task2_get_countries_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     country_name = data["data"][0]["attributes"]["name"]
-    assert country_name == "US",
+    assert country_name == "US"
 
 
 def test_task2_get_province_data(client):
