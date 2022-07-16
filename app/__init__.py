@@ -59,7 +59,7 @@ def create_api(app, base_url="localhost", host="localhost", port=4000, api_prefi
     api.expose_object(Country)
     api.expose_object(Winery)
     api.expose_object(Province)
-    print(f"Created API: http://{host}:{port}/{api_prefix}")
+   # print(f"Created API: http://{host}:{port}/{api_prefix}")
 
 
 def create_app(config_filename=None, host="localhost"):
@@ -84,6 +84,7 @@ def create_app(config_filename=None, host="localhost"):
         df = pd.read_csv(data_path)
         # Gets a list of unique countries from the data frame
         countries = df.country.unique()
+        province = df.province.unique()
 
         for country_name in countries:
             # this creates a country model based on Sqlalchemy model
