@@ -25,7 +25,7 @@ def test_task2_home_route(client):
     assert response.status_code == 200, "Homepage did return 200 status code"
 
 
-def test_task2_home_route():
+def test_task2_route():
     """Testing the routes to list records"""
     response = app.test_client().get('/')
     assert response.status_code == 200
@@ -97,6 +97,26 @@ def test_task2_post_wineries_data(client):
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 201
     assert response_data["data"]["attributes"]["name"] == "Heitz"
+
+
+def test_task2_post_countries(client):
+    """Testing a post to countries"""
+    data = {"attributes": {"name": "France", "country_id": 13}, "type": "Country"}
+    response = client.post("/countries/", json={"data": data})
+    response_data = response.get_json()
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 201
+    assert response_data["data"]["attributes"]["name"] == "France"
+
+
+def test_task2_post_wineries(client):
+    """Testing a post to wineries"""
+    data = {"attributes": {"name": "Vignobles Brumont", "country_id": 13}, "type": "Winery"}
+    response = client.post("/winery/", json={"data": data})
+    response_data = response.get_json()
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 201
+    assert response_data["data"]["attributes"]["name"] == "Vignobles Brumont"
 
 
 def test_task2_post_countries_data(client):
