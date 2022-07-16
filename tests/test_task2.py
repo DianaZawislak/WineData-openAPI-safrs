@@ -46,6 +46,14 @@ def test_task2_province_route():
     response = app.test_client().get('/province/')
     assert response.status_code == 200
 
+
+@pytest.mark.parametrize("country, winery", [
+    ("US", "Heitz"),
+    ("France", "Vignobles Brumont"),
+])
+
+
+
     #  testing "GET" endpoints
 
 
