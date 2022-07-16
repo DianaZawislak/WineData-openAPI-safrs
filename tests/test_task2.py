@@ -196,7 +196,7 @@ def test_task2_post_with_relationship_province_country(client):
 
 
 def test_task2_patch_wineries_data(client):
-    """Testing a patch / update to a city that is just inserted"""
+    """Testing a patch / update to a winery that is just inserted"""
     data = {"attributes": {"name": "Blue Farm", "country_id": 1}, "type": "Winery"}
     response = client.post("/winery/", json={"data": data})
     response_data = response.get_json()
@@ -238,6 +238,39 @@ def test_task2_patch_province_data(client):
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 200
     assert response_data["data"]["attributes"]["name"] == "California"
+
+
+    # Testing forbidden request 403
+
+
+def test_task2_forbidden_patch_country_data(client):
+    """Testing forbidden request response to a country that is just inserted"""
+    data = {"attributes": {"name": "US", "country_id": 1}, "type": "Country"}
+    response = client.post("/countries", json={"data": data})
+    response_data = response.get_json()
+    country_id = response_data["data"]["id"]
+    print_json_to_data_view_log_nicely(response_data)
+    data = {"attributes": {"name": "Spain", "country_id": 1}, "type": "Winery", "id": country_id}
+    response = client.patch(f"/countries/{country_id}", json={"data": data})
+    response_data = response.get_json()
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 403
+    assert response_data["data"]["attributes"]["name"] == "US"
+
+
+def test_task2_forbidden_patch_winery_data(client):
+    """Testing forbidden patch to a winery that is just inserted"""
+    data = {"attributes": {"name": "Spain", "country_id": 1}, "type": "Country"}
+    response = client.post("/countries", json={"data": data})
+    response_data = response.get_json()
+    country_id = response_data["data"]["id"]
+    print_json_to_data_view_log_nicely(response_data)
+    data = {"attributes": {"name": "US", "country_id": 1}, "type": "Winery", "id": country_id}
+    response = client.patch(f"/countries/{country_id}", json={"data": data})
+    response_data = response.get_json()
+    print_json_to_data_view_log_nicely(response_data)
+    assert response.status_code == 403
+    assert response_data["data"]["attributes"]["name"] == "Spain"
 
     # Testing "METHOD NOT ALLOWED" endpoints
 
