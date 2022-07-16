@@ -32,6 +32,13 @@ LOGGING_CONFIG = {
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',  # Default is stderr
         },
+        'file.handler.errors': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'standard',
+            'filename': os.path.abspath(os.path.join(Config.LOG_DIR, 'errors.log')),
+            'maxBytes': 10000000,
+            'backupCount': 5,
+        },
         'file.handler.information': {
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'standard',
@@ -75,6 +82,11 @@ LOGGING_CONFIG = {
         'information': {
             'handlers': ['file.handler.information'],
             'level': 'INFO',
+            'propagate': False
+        },
+        'errors': {
+            'handlers': ['file.handler.errors'],
+            'level': 'DEBUG',
             'propagate': False
         },
         'werkzeug': {  # if __name__ == '__main__'

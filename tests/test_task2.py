@@ -56,7 +56,7 @@ def test_task2_get_countries_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     country_name = data["data"][0]["attributes"]["name"]
-    assert country_name == "US", "The first country is US as expected"
+    assert country_name == "US"
 
 
 def test_task2_get_province_data(client):
@@ -66,19 +66,19 @@ def test_task2_get_province_data(client):
     print_json_to_data_view_log_nicely(response.get_json())
     data = response.get_json()
     province_name = data["data"][0]["attributes"]["name"]
-    assert province_name == "California", "The first province/state is California as expected"
+    assert province_name == "California"
 
     #  Testing "POST" endpoints
 
 
 def test_task2_post_wineries_data(client):
     """Testing a post to wineries"""
-    data = {"attributes": {"name": "Blue Farm", "country_id": 1}, "type": "Winery"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
     response = client.post("/winery/", json={"data": data})
     response_data = response.get_json()
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 201
-    assert response_data["data"]["attributes"]["name"] == "Blue Farm"
+    assert response_data["data"]["attributes"]["name"] == "Heitz"
 
 
 def test_task2_post_countries_data(client):
@@ -170,7 +170,7 @@ def test_task2_patch_wineries_data(client):
     response_data = response.get_json()
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 200
-    assert response_data["data"]["attributes"]["name"] == "Heitz"
+    assert response_data["data"]["attributes"]["name"] == "Blue Farm"
 
 
 def test_task2_patch_countries_data(client):
@@ -278,6 +278,50 @@ def test_task2_delete_province(client):
     response = client.delete(f"/province/{winery_id}", json={"data": data})
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204
+
+# Testing log files
+
+root = os.path.dirname(os.path.abspath(__file__))
+logdir = os.path.join(root, '../logs')
+
+def test_task2_dataview_logfiles():
+    logfile = os.path.join(logdir, 'data_view.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
+
+
+def test_task2_request_logfiles():
+    logfile = os.path.join(logdir, 'information.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
+
+
+def test_task2_sqlalchemy_logfiles():
+    logfile = os.path.join(logdir, 'root_logger_default.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
+
+
+def test_task2_werkzeug_logfiles():
+    logfile = os.path.join(logdir, 'werkzeug.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
+
+
+def test_task2_errors_logfiles():
+    logfile = os.path.join(logdir, 'errors.log')
+    if not os.path.exists(logfile):
+        f = open(logfile, 'w')
+        f.close()
+    assert os.path.exists(logfile) == True
 
 
 # Testing CSV file

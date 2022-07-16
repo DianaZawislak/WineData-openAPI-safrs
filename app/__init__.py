@@ -36,9 +36,10 @@ class Province(SAFRSBase, db.Model):
     __tablename__ = "province"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, default="")
+    country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
     winery = db.relationship("Winery", back_populates="province")
     country = db.relationship("Country", back_populates="province")
-    country_id = db.Column(db.Integer, db.ForeignKey("countries.id"))
+
 
 
 class Country(SAFRSBase, db.Model):
