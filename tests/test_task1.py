@@ -70,7 +70,7 @@ def test_task1_patch_method_not_allowed_wineries_data(client):
 
     data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
 
-    response = client.post(f"/wonery/{city_id}", json={"data": data})
+    response = client.post(f"/winery/{city_id}", json={"data": data})
     response_data = response.get_json()
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 405

@@ -269,11 +269,11 @@ def test_task2_delete_winery(client):
 
 def test_task2_delete_country(client):
     """This will test deleting a country"""
-    data = {"attributes": {"name": "US", "country_id": 1}, "type": "Country"}
+    data = {"attributes": {"name": "Heitz", "country_id": 1}, "type": "Winery"}
     response = client.post("/country/", json={"data": data})
     response_data = response.get_json()
     country_id = response_data["data"]["id"]
-    data = {"type": "Country", "id": country_id}
+    data = {"type": "Winery", "id": country_id}
     response = client.delete(f"/country/{country_id}", json={"data": data})
     print_json_to_data_view_log_nicely(response_data)
     assert response.status_code == 204
